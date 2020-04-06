@@ -16,7 +16,6 @@ namespace TellurionTestProject
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
         public FramesPerSecondCounter FpsCounter { get; } = new FramesPerSecondCounter();
-        private SpriteBatch _spriteBatch;
         private World _world;
 
         public GameMain()
@@ -35,13 +34,12 @@ namespace TellurionTestProject
         /// </summary>
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
             var font = Content.Load<SpriteFont>("FPS");
             var texture = Content.Load<Texture2D>("0x72_16x16DungeonTileset.v4");
             var tileset = new Tileset(texture, 16, 16);
 
             _world = new WorldBuilder()
-                .AddSystem(new SpriteRenderingSystem(GraphicsDevice, texture))
+                .AddSystem(new SpriteRenderingSystem(GraphicsDevice))
                 .AddSystem(new HudSystem(this, GraphicsDevice, font))
                 .Build();
 
@@ -62,15 +60,6 @@ namespace TellurionTestProject
             {
                 entityFactory.SpawnBuilding(random.Next(i * step, x), random.Next(border, y));
             }
-        }
-
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            _spriteBatch.Dispose();
         }
 
         /// <summary>
