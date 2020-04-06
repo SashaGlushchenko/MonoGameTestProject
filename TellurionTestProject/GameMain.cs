@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -39,7 +40,8 @@ namespace TellurionTestProject
             var tileset = new Tileset(texture, 16, 16);
 
             _world = new WorldBuilder()
-                .AddSystem(new SpriteRenderingSystem(GraphicsDevice))
+                .AddSystem(new UnitGrowingSystem())
+                .AddSystem(new SpriteRenderingSystem(GraphicsDevice, font))
                 .AddSystem(new HudSystem(this, GraphicsDevice, font))
                 .Build();
 
@@ -53,12 +55,19 @@ namespace TellurionTestProject
             var border = 100;
             var x = _graphicsDeviceManager.PreferredBackBufferWidth - border;
             var y = _graphicsDeviceManager.PreferredBackBufferHeight - border;
-            var step = x / 11;
+            var random = new Random();
 
-            var random = new FastRandom();
-            for (var i = 1; i <= 10; i++)
+            var buildingCount = random.Next(6, 10);
+
+            var step = x / (buildingCount + 1);
+
+            for (var i = 0; i <= buildingCount; i++)
             {
-                entityFactory.SpawnBuilding(random.Next(i * step, x), random.Next(border, y));
+                entityFactory.SpawnBuilding(
+                    random.Next( i == 0 ? border: i * step, (i * step + border)), 
+                    random.Next(border, y),
+                    i == 0 ? OwnerEnum.Player : (i == buildingCount ? OwnerEnum.AI : OwnerEnum.None)
+                    );
             }
         }
 

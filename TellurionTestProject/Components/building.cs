@@ -4,11 +4,11 @@ using System.Text;
 
 namespace TellurionTestProject.Components
 {
-    public class building
+    public class Building
     {
         public int Level { get; set; }
 
-        public float UnitsCount { get; set; }
+        public double UnitsCount { get; set; }
 
         public OwnerEnum Owner { get; set; }
 
